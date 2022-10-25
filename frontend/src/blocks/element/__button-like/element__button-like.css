@@ -1,0 +1,22 @@
+.element__button-like {
+  background-image: url(../../../images/like.svg);
+  background-repeat: no-repeat;
+  width: 21px;
+  height: 19px;
+  border: 0px;
+  background-color: transparent;
+  transition: opacity linear 0.35s;
+  opacity: 1;
+}
+
+.element__button-like:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.element__button-like_active {
+  background-image: url(../../../images/blackheart.svg);
+  background-repeat: no-repeat;
+  width: 21px;
+  height: 19px;
+}

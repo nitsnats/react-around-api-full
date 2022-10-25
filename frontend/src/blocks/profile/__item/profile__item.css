@@ -1,0 +1,6 @@
+.profile__item {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  max-width: 100%;
+}

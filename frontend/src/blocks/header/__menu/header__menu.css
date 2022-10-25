@@ -1,0 +1,25 @@
+.header__menu {
+    background: url("../../../images/nav_menu.svg") center;
+    width: 24px;
+    height: 24px;
+    background-size: 24px 24px;
+    border: none;
+    cursor: pointer;
+    top: 35px;
+    right: 100px;
+    padding: 0;
+    margin: 0;
+    transition: 0.3s;
+  }
+  
+  .header__menu:hover {
+    opacity: 0.6;
+    order: 1;
+  }
+  
+  @media (min-width: 500px) {
+    .header__menu {
+      display: none;
+    }
+  }
+  

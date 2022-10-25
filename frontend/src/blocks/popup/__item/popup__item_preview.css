@@ -1,0 +1,9 @@
+.popup__item_preview {
+    padding: 0;
+    background: transparent;
+    max-height: 75vh;
+    max-width: 75vw;
+    width: auto;
+    flex-direction: column;
+}
+

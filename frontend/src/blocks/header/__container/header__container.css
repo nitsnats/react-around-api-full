@@ -1,0 +1,28 @@
+.header__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  @media (min-width: 750px) {
+    .header__container {
+      display: flex;
+    }
+  }
+  
+  .header__user-details {
+    display: block;
+  }
+  
+  @media (max-width: 500px) {
+    .header__user-details {
+      display: none;
+    }
+  }
+  
+  @media (min-width: 500px) {
+    .header__user-details-mobile {
+      display: none;
+    }
+  }
+  

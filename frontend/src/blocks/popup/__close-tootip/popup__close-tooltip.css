@@ -1,0 +1,27 @@
+.popup__close-tooltip {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    background-color: transparent;
+    background-image: url(../../../images/close_icon.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    border: 0;
+    transition: opacity linear 0.35s;
+    opacity: 1;
+  }
+  
+  .popup__close-tooltip:hover {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+  
+  @media screen and (max-width: 550px) {
+    .popup__close-tooltip {
+      background-size: 30px 30px;
+      width: 30px;
+      height: 30px;
+      left: 50%;
+      margin-top: -21px;
+    }
+  }

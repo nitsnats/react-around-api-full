@@ -1,0 +1,12 @@
+.header__text {
+  border: 0px;
+  background-color: transparent;
+  transition: opacity linear 0.35s;
+  opacity: 1;
+  color: white;
+  padding: 0;
+  margin: 16px 0 16px 24px;
+  height: 22px;
+  font-size: 18px;
+  font-weight: 400;
+}

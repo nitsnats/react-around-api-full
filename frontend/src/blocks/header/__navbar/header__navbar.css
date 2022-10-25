@@ -1,0 +1,10 @@
+.header__navbar {
+    /* padding-right: 30px; */
+    
+}
+
+@media (max-width: 650px) {
+  .header__navbar {
+      /* display: none; */
+  }  
+}

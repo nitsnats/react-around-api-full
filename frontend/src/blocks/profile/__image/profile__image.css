@@ -1,0 +1,26 @@
+.profile__image {
+  width: 120px;
+  height: 120px;
+  margin: 3.75px 26.25px 3.75px 0;
+  border-radius: 50%;
+}
+
+.profile__image:hover {
+  cursor: url(../../../images/cursor_edit.svg),auto;
+  opacity: 1;
+}
+
+@media screen and (max-width: 785px) {
+  .profile__image {
+    margin: 0px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+}
+
+@media screen and (max-width: 320px) {
+  .profile__image {
+    margin: 0px auto 26.25px;
+  }
+}

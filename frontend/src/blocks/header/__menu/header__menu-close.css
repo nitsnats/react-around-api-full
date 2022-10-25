@@ -1,0 +1,26 @@
+.header__menu-close {
+    width: 30px;
+    height: 30px;
+    top: 35px;
+    right: 100px;
+    background: url(../../../images/nav_menu_close.svg) center;
+    background-size: 30px 30px;
+    border: none;
+    padding: 0;
+    margin: 0;
+    transition: opacity linear 0.35s;
+    opacity: 1;
+    order: 1;
+    cursor: pointer;
+  }
+  
+  .header__menu-close:hover {
+    opacity: 0.6;
+  }
+  
+  @media (min-width: 500px) {
+    .header__menu-close {
+      display: none;
+    }
+  }
+  
