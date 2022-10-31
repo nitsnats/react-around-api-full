@@ -1,4 +1,10 @@
 const User = require('../models/user');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('../constants/config');
+
+//const { JWT_SECRET } = process.env;
+
 // const statusCodes = require('../constants/error');
 const {
   ER_MES_OK,
@@ -7,6 +13,7 @@ const {
   ER_MES_NOT_FOUND,
   ER_MES_INTERNAL_SERVER_ERROR,
 } = require('../constants/error');
+const { default: mongoose } = require('mongoose');
 
 // GET
 module.exports.getUsers = (req, res) => {
@@ -38,14 +45,72 @@ module.exports.getUser = (req, res) => {
     });
 };
 
+// POST /signin
+// module.exports.login = (req, res) => {
+//   const { email, password } = req.body;
+
+//   User.findOne({ email })
+//     .then((user) => {
+//       if (!user) {
+//         return Promise.reject(new Error('Incorrect password or email'));
+//       }
+//       return bcrypt.compare(password, user.password);
+//     })
+//     .then((matched) => {
+//       if (!matched) {
+//         // the hashes didn't match, rejecting the promise
+//         return Promise.reject(new Error('Incorrect password or email'));
+//       }
+//       // successful authentication
+//       res.send({ message: 'Everything good!' });
+//     })
+//     .catch((err) => {
+//       res
+//         .status(401)
+//         .send({ message: err.message });
+//     });
+// };
+
+module.exports.login = (req, res ) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ id: user._id }, JWT_SECRET, {
+        expiresIn: '7d',
+      });
+      res.send({ data: user.toJSON(), token });
+    })
+    .catch((err) => {
+      customError(res, 401, err.message);
+    });
+  };
+
 // POST
-module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
+module.exports.createUser = (req, res, next) => {
+  const { name, about, avatar, password, email } = req.body;
+  User.findOne({email})
+  .then((user) => {
+    if (user) {
+      res.status(ER_MES_CONFLICT_ERROR).send({ message:'The user with the provided email already exists'}); //409
+    } else {
+      return bcrypt.hash(password, 10);
+    }
+  })
+  .then((hash) => User.create({
+     name, about, avatar, email, password: hash }))
     .then((user) => res.status(ER_MES_CREATED).send({ data: user })) // 201
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ER_MES_BAD_REQUEST).send({ message: err.message }); // 400
+        // res.status(ER_MES_BAD_REQUEST).send({ message: err.message }); // 400
+        res.status(ER_MES_BAD_REQUEST).send({
+          message: `${Object.values(err.errors)
+            .map((error) => error.message)
+            .join(', ')}`,
+        });
+        // next(new ER_MES_BAD_REQUEST(`${Object.values(err.errors).map((error) => error.message)
+        //   .join(', ')}`,
+        // });
       } else {
         res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: 'An error occured' }); // 500
       }
@@ -152,3 +217,5 @@ module.exports.updateUser = (req, res) => {
 
   return updateUserData(req, res);
 };
+
+//module.exports = mongoose.model('user', userSchema);

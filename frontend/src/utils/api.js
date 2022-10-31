@@ -76,9 +76,10 @@ class Api {
 }
 
 export const api = new Api({
-  baseUrl: "https://around.nomoreparties.co/v1/cohort-3-en",//'https://api.nomoreparties.co'
+    //baseUrl: "https://around.nomoreparties.co/v1/cohort-3-en",//'https://api.nomoreparties.co'
+  baseUrl: "http://localhost:3001",
   headers: {
-    authorization: "4cdae314-7e8a-4bed-8ada-70ad33c12e13",//`bearer ${localStorage.getItem('jwt)}`
+    authorization: `Bearer ${localStorage.getItem('jwt')}`, // "4cdae314-7e8a-4bed-8ada-70ad33c12e13"
     "Content-Type": "application/json",//-no need
   },
 });
