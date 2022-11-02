@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const { LINK_REGEXP } = require('../constants/regex');
 const bcrypt = require('bcrypt');
-//const isEmail = require('validator/lib/isEmail');
+const mongoose = require('mongoose');
+const isEmail = require('validator/lib/isEmail');
+const { LINK_REGEXP } = require('../constants/regex');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.statics.findUserByCredentials = function findUserByCredentials (email, password) {
+userSchema.statics.findUserByCredentials = function findUserByCredentials (email, password,) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {

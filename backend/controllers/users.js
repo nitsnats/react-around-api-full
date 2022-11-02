@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../constants/config');
 
-//const { JWT_SECRET } = process.env;
+// const { JWT_SECRET } = process.env;
 
 // const statusCodes = require('../constants/error');
 const {
@@ -82,14 +82,15 @@ module.exports.login = (req, res ) => {
       res.send({ data: user.toJSON(), token });
     })
     .catch((err) => {
-      customError(res, 401, err.message);
+      console.log('line85=>', err)
+      res.status(ER_MES_UNSUTHORIZED_ERROR).send({ message: err.message }); //401
     });
   };
 
 // POST
 module.exports.createUser = (req, res, next) => {
-  const { name, about, avatar, password, email } = req.body;
-  User.findOne({email})
+  const { email, password } = req.body;
+  User.findOne({ email })
   .then((user) => {
     if (user) {
       res.status(ER_MES_CONFLICT_ERROR).send({ message:'The user with the provided email already exists'}); //409
@@ -98,8 +99,13 @@ module.exports.createUser = (req, res, next) => {
     }
   })
   .then((hash) => User.create({
-     name, about, avatar, email, password: hash }))
-    .then((user) => res.status(ER_MES_CREATED).send({ data: user })) // 201
+    email, password: hash, }))
+    .then((user) => res.status(ER_MES_CREATED).send({
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      email: user.email, }),
+      ) // 201
     .catch((err) => {
       if (err.name === 'ValidationError') {
         // res.status(ER_MES_BAD_REQUEST).send({ message: err.message }); // 400

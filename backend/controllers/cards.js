@@ -46,15 +46,15 @@ module.exports.createCard = (req, res) => {
 
   const owner = req.user._id;
   const likes = [];
-  
+
   Card.create({
     name,
     link,
     owner,
-    likes,
+    // likes,
   })
 
-    .then((cards) => res.status(ER_MES_CREATED).send({ data: cards })) // 201
+    .then((cards) => res.status(ER_MES_CREATED).send( cards )) // 201
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ER_MES_BAD_REQUEST).send({ message: 'Data format is incorrect' }); // 400

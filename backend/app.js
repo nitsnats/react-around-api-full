@@ -1,9 +1,12 @@
 const express = require('express');
+//require('dotenv').config();
+const cors = require('cors');
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const router = require('express').Router();
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -11,18 +14,24 @@ const { PORT = 3001 } = process.env;
 mongoose.connect('mongodb://127.0.0.1:27017/aroundb');
 // mongoose.connect('mongodb://localhost:27017/aroundb');
 
+app.use(cors());
+app.options('*', cors());
+
+app.use(helmet());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+
+
 app.post('/signup', createUser);
 app.post('/signin', login);
-
 app.use(auth);
+
 
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 
 
-app.use(helmet());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.use('/cards', require('./routes/cards'));
 
