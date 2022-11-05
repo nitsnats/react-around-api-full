@@ -12,6 +12,8 @@ const {
   ER_MES_BAD_REQUEST,
   ER_MES_NOT_FOUND,
   ER_MES_INTERNAL_SERVER_ERROR,
+  ER_MES_UNSUTHORIZED_ERROR,
+  ER_MES_CONFLICT_ERROR,
 } = require('../constants/error');
 const { default: mongoose } = require('mongoose');
 
@@ -93,7 +95,8 @@ module.exports.createUser = (req, res, next) => {
   User.findOne({ email })
   .then((user) => {
     if (user) {
-      res.status(ER_MES_CONFLICT_ERROR).send({ message:'The user with the provided email already exists'}); //409
+      throw new ConflictError('Email already exists');
+      // res.status(ER_MES_CONFLICT_ERROR).send({ message:'The user with the provided email already exists'}); //409
     } else {
       return bcrypt.hash(password, 10);
     }

@@ -46,7 +46,7 @@ const Main = ({
         />
       </section>
       <section className="elements">
-        {cards.map((card) => (
+        {/* {cards.map((card) => (
           <Card
             {...card}
             key={card._id}
@@ -55,7 +55,19 @@ const Main = ({
             onCardDelete={onCardDelete}
             handleDeleteClick={handleDeleteClick}
           />
-        ))}
+        ))} */}
+        {cards.map((card) => {
+            return (
+              <Card
+                card={card}
+                key={card._id}
+                onCardClick={onCardClick}
+                onCardLike={onCardLike}
+                onCardDelete={onCardDelete}
+                handleDeleteClick={handleDeleteClick}
+              />
+            );
+          })}
       </section>
     </main>
   );

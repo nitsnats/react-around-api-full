@@ -71,7 +71,7 @@ function App() {
           }
         })
         .catch((err) => {
-          console.log(err);
+          //console.log(err);
           history.push("/signin");
         })
         .finally(() => {

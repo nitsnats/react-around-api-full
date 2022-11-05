@@ -15,7 +15,7 @@ function Card({
   const currentUser = React.useContext(CurrentUserContext);
 
   // Checking if the current user is the owner of the current card
-  const isOwn = owner._id === currentUser._id;
+  const isOwn = owner === currentUser._id;
 
   // Creating a variable for the delete button
   //const cardDeleteButtonClassName = 'element__button-delete_visible';
@@ -24,7 +24,7 @@ function Card({
   }`;
 
   // Check if the card was liked by the current user
-  const isLiked = likes.some((user) => user._id === currentUser._id);
+  const isLiked = likes.some((user) => user === currentUser._id);
 
   // Creating a variable for the like button
   //const cardLikeButtonClassName = 'element__button-like_active';

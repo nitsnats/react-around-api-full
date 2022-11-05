@@ -7,26 +7,35 @@ class Api {
   _checkResponse = (res) =>
     res.ok ? res.json() : Promise.reject(res.statusText);
 
-  _request(url, options) {
-    return fetch(url, options).then(this._checkResponse)
+  _request(url, headers) {
+    return fetch(url, headers).then(this._checkResponse)
   }  
 
 
   getInitialCards() {
     return this._request(`${this._baseUrl}/cards`, {
-      headers: this._headers,
+      headers: {
+        ...this._headers,
+        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
     });
   }
   
   getUserInfo() {
     return this._request(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
+      headers: {
+        ...this._headers,
+        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
     });
   }
   
   createCard(data) {
     return this._request(`${this._baseUrl}/cards`, {
-      headers: this._headers,
+      headers: {
+        ...this._headers,
+        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
       method: "POST",
       body: JSON.stringify(data),
     })
@@ -34,14 +43,20 @@ class Api {
     
   deleteCard(cardId) {
     return this._request(`${this._baseUrl}/cards/${cardId}`, {
-      headers: this._headers,
+      headers: {
+        ...this._headers,
+        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
       method: "DELETE",
     })
   }
 
   editProfile(name, about) {
     return this._request(`${this._baseUrl}/users/me`, {
-      headers: this._headers,
+      headers: {
+        ...this._headers,
+        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
       method: "PATCH",
       body: JSON.stringify({
         name,
@@ -52,7 +67,10 @@ class Api {
 
   editAvatar(avatar) {
     return this._request(`${this._baseUrl}/users/me/avatar`, {
-      headers: this._headers,
+      headers: {
+        ...this._headers,
+        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
       method: "PATCH",
       body: JSON.stringify({
         avatar: avatar,
@@ -62,14 +80,20 @@ class Api {
 
   addLike(id) {
     return this._request(`${this._baseUrl}/cards/likes/${id}`, {
-      headers: this._headers,
+      headers: {
+        ...this._headers,
+        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
       method: "PUT",
     })
   }
 
   removeLike(id) {
     return this._request(`${this._baseUrl}/cards/likes/${id}`, {
-      headers: this._headers,
+      headers: {
+        ...this._headers,
+        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
       method: "DELETE",
     })
   }
