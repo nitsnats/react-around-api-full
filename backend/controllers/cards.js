@@ -12,7 +12,7 @@ const {
 // GET
 module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.status(ER_MES_OK).send( cards )) // 200
+    .then((cards) => res.status(ER_MES_OK).send({ data: cards })) // 200
     .catch((err) => res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: err.message }, 'An error occured')); // 500
 };
 
@@ -45,7 +45,6 @@ module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
 
   const owner = req.user._id;
-  // const likes = [];
 
   Card.create({
     name,
@@ -53,7 +52,8 @@ module.exports.createCard = (req, res) => {
     owner,
     // likes,
   })
-    .then((cards) => res.status(ER_MES_CREATED).send({ data: cards })) // 201
+
+    .then((cards) => res.status(ER_MES_CREATED).send({  cards })) // 201
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(ER_MES_BAD_REQUEST).send({ message: 'Data format is incorrect' }); // 400

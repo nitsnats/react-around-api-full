@@ -24,7 +24,7 @@ function Card({
   }`;
 
   // Check if the card was liked by the current user
-  const isLiked = likes.some((user) => user === currentUser._id);
+  const isLiked = likes.some((user) => user._id === currentUser._id);
 
   // Creating a variable for the like button
   //const cardLikeButtonClassName = 'element__button-like_active';

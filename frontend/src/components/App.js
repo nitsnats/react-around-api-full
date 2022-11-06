@@ -53,7 +53,7 @@ function App() {
     api
       .getInitialCards()
       .then((res) => {
-        setCards(res);
+        setCards(res.data);
       })
       .catch(console.log);
   }, []);
@@ -71,7 +71,7 @@ function App() {
           }
         })
         .catch((err) => {
-          //console.log(err);
+          console.log(err);
           history.push("/signin");
         })
         .finally(() => {
@@ -209,15 +209,15 @@ function App() {
     setSelectedCardForDeletion(_id);
   }
 
-  const handleAddPlaceSubmit = ({ name, link }) => {
-    if (!name || !link) {
-      throw new Error("name or link is missing");
-    }
+  const handleAddPlaceSubmit = (data) => {
+    // if (!name || !link) {
+    //   throw new Error("name or link is missing");
+    // }
     setIsLoading(true);
     api
-      .createCard({ name, link })
+      .createCard(data)
       .then((newCard) => {
-        setCards([newCard, ...cards]);
+        setCards([newCard.data, ...cards]);
         closeAllPopups();
       })
       .catch((err) => {

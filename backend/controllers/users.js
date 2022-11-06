@@ -84,7 +84,6 @@ module.exports.login = (req, res ) => {
       res.send({ data: user.toJSON(), token });
     })
     .catch((err) => {
-      console.log('line85=>', err)
       res.status(ER_MES_UNSUTHORIZED_ERROR).send({ message: err.message }); //401
     });
   };
@@ -108,7 +107,7 @@ module.exports.createUser = (req, res, next) => {
       about: user.about,
       avatar: user.avatar,
       email: user.email, }),
-      ) // 201
+      ) // 201  //data:users
     .catch((err) => {
       if (err.name === 'ValidationError') {
         // res.status(ER_MES_BAD_REQUEST).send({ message: err.message }); // 400
