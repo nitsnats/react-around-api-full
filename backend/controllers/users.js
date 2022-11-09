@@ -95,20 +95,24 @@ module.exports.createUser = (req, res, next) => {
   .then((user) => {
     if (user) {
       throw new ConflictError('Email already exists');
-      // res.status(ER_MES_CONFLICT_ERROR).send({ message:'The user with the provided email already exists'}); //409
     } else {
       return bcrypt.hash(password, 10);
     }
   })
-  .then((hash) => User.create({
-    email, password: hash, }))
-    .then((user) => res.status(ER_MES_CREATED).send({
+  .then(hash => {
+    return User.create({ email, password: hash, })
+  })
+    .then(user => res.status(ER_MES_CREATED).send({
       name: user.name,
       about: user.about,
       avatar: user.avatar,
-      email: user.email, }),
+      email: user.email,
+     })
       ) // 201  //data:users
     .catch((err) => {
+      if(err instanceof ConflictError) {
+        return res.status(ER_MES_CONFLICT_ERROR).send({ message:'The user with the provided email already exists'}); //409
+      }
       if (err.name === 'ValidationError') {
         // res.status(ER_MES_BAD_REQUEST).send({ message: err.message }); // 400
         res.status(ER_MES_BAD_REQUEST).send({

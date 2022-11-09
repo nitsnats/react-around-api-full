@@ -38,35 +38,36 @@ function App() {
   const [isCheckingToken, setIsCheckingToken] = useState(true);
   const [isSuccess, setIsSuccess] = useState(true);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [token, setToken] = useState(localStorage.getItem('jwt'));
   //const [email, setEmail] = useState('');
 
   useEffect(() => {
     api
-      .getUserInfo()
+      .getUserInfo(token)
       .then((res) => {
         setCurrentUser(res);
       })
       .catch(console.log);
-  }, []);
+  }, [token]);
 
   useEffect(() => {
     api
-      .getInitialCards()
+      .getInitialCards(token)
       .then((res) => {
         setCards(res.data);
       })
       .catch(console.log);
-  }, []);
+  }, [token]);
 
   useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
-    if (jwt) {
+    //const jwt = localStorage.getItem("jwt");
+    if (token) {
       auth
-        .checkToken(jwt)
+        .checkToken(token)
         .then((res) => {
-          if (res.data._id) {
+          if (res._id) {
             setIsLoggedIn(true);
-            setUserData({ email: res.data.email });
+            setUserData({ email: res.email });
             history.push("/main");
           }
         })
@@ -135,7 +136,7 @@ function App() {
   const handleUpdateUser = ({ name, about }) => {
     setIsLoading(true);
     api
-      .editProfile(name, about)
+      .editProfile({name, about}, token)
       .then((res) => {
         setCurrentUser(res);
         closeAllPopups();
@@ -149,7 +150,7 @@ function App() {
   const handleUpdateAvatar = ({ avatar }) => {
     setIsLoading(true);
     api
-      .editAvatar(avatar)
+      .editAvatar({avatar}, token)
       .then((res) => {
         setCurrentUser({ ...currentUser, avatar: res.avatar });
         closeAllPopups();
@@ -161,11 +162,11 @@ function App() {
   };
 
   const handleCardLike = (card) => {
-    const isLiked = card.likes.some((user) => user._id === currentUser._id);
+    const isLiked = card.likes.some((user) => user === currentUser._id);
 
     if (isLiked) {
       api
-        .removeLike(card._id)
+        .removeLike(card._id, token)
         .then((unlikedCard) => {
           const newCards = cards.map((card) => {
             return card._id === unlikedCard._id ? unlikedCard : card;
@@ -175,7 +176,7 @@ function App() {
         .catch(console.log);
     } else {
       api
-        .addLike(card._id, !isLiked)
+        .addLike(card._id, !isLiked, token)
 
         .then((likedCard) => {
           const newCards = cards.map((card) => {
@@ -209,13 +210,13 @@ function App() {
     setSelectedCardForDeletion(_id);
   }
 
-  const handleAddPlaceSubmit = (data) => {
+  const handleAddPlaceSubmit = ({ name, link }) => {
     // if (!name || !link) {
     //   throw new Error("name or link is missing");
     // }
     setIsLoading(true);
     api
-      .createCard(data)
+      .createCard({ name, link }, token)
       .then((newCard) => {
         setCards([newCard.data, ...cards]);
         closeAllPopups();
@@ -259,6 +260,7 @@ function App() {
           setIsLoggedIn(true);
           setUserData({ email });
           localStorage.setItem("jwt", res.token);
+          setToken(res.token);
           history.push("/main");
           setIsInfoTooltipOpen(false);
         } else {

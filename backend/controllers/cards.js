@@ -44,7 +44,9 @@ module.exports.deleteCard = (req, res) => {
 module.exports.createCard = (req, res) => {
   const { name, link } = req.body;
 
-  const owner = req.user._id;
+  const owner = req.user.id;
+  // console.log(req.user)
+  // console.log(owner)
 
   Card.create({
     name,
@@ -53,10 +55,11 @@ module.exports.createCard = (req, res) => {
     // likes,
   })
 
-    .then((cards) => res.status(ER_MES_CREATED).send({  cards })) // 201
+    .then((card) => res.status(ER_MES_CREATED).send(card)) // 201
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(ER_MES_BAD_REQUEST).send({ message: 'Data format is incorrect' }); // 400
+        //res.status(ER_MES_BAD_REQUEST).send({ message: 'Data format is incorrect' }); // 400
+        res.status(400).send(err.message)
       } else {
         res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: err.message }); // 500
       }

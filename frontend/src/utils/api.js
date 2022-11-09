@@ -12,50 +12,50 @@ class Api {
   }  
 
 
-  getInitialCards() {
+  getInitialCards(token) {
     return this._request(`${this._baseUrl}/cards`, {
       headers: {
         ...this._headers,
-        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        authorization: `Bearer ${token}`,
       },
     });
   }
   
-  getUserInfo() {
+  getUserInfo(token) {
     return this._request(`${this._baseUrl}/users/me`, {
       headers: {
         ...this._headers,
-        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        authorization: `Bearer ${token}`,
       },
     });
   }
   
-  createCard(data) {
+  createCard(data, token) {
     return this._request(`${this._baseUrl}/cards`, {
       headers: {
         ...this._headers,
-        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        authorization: `Bearer ${token}`,
       },
       method: "POST",
       body: JSON.stringify(data),
     })
   }
     
-  deleteCard(cardId) {
+  deleteCard(cardId, token) {
     return this._request(`${this._baseUrl}/cards/${cardId}`, {
       headers: {
         ...this._headers,
-        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        authorization: `Bearer ${token}`,
       },
       method: "DELETE",
     })
   }
 
-  editProfile(name, about) {
+  editProfile({name, about}, token) {
     return this._request(`${this._baseUrl}/users/me`, {
       headers: {
         ...this._headers,
-        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        authorization: `Bearer ${token}`,
       },
       method: "PATCH",
       body: JSON.stringify({
@@ -65,11 +65,11 @@ class Api {
     })
   }
 
-  editAvatar(avatar) {
+  editAvatar(avatar, token) {
     return this._request(`${this._baseUrl}/users/me/avatar`, {
       headers: {
         ...this._headers,
-        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        authorization: `Bearer ${token}`,
       },
       method: "PATCH",
       body: JSON.stringify({
@@ -78,21 +78,21 @@ class Api {
     })
   }
 
-  addLike(id) {
+  addLike(id, token) {
     return this._request(`${this._baseUrl}/cards/likes/${id}`, {
       headers: {
         ...this._headers,
-        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        authorization: `Bearer ${token}`,
       },
       method: "PUT",
     })
   }
 
-  removeLike(id) {
+  removeLike(id, token) {
     return this._request(`${this._baseUrl}/cards/likes/${id}`, {
       headers: {
         ...this._headers,
-        authorization: `Bearer ${localStorage.getItem("jwt")}`,
+        authorization: `Bearer ${token}`,
       },
       method: "DELETE",
     })

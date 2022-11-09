@@ -22,10 +22,10 @@ function Card({
   const cardDeleteButtonClassName = `element__button-delete ${
     isOwn ? "element__button-delete_visible" : ""
   }`;
-
+  
   // Check if the card was liked by the current user
   const isLiked = likes.some((user) => user._id === currentUser._id);
-
+  console.log('isLiked', isLiked)
   // Creating a variable for the like button
   //const cardLikeButtonClassName = 'element__button-like_active';
   const cardLikeButtonClassName = `element__button-like ${
