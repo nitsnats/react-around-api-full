@@ -90,29 +90,26 @@ module.exports.login = (req, res ) => {
 
 // POST
 module.exports.createUser = (req, res, next) => {
-  const { email, password } = req.body;
+  const { name, about, avatar, email, password } = req.body;
   User.findOne({ email })
   .then((user) => {
     if (user) {
-      throw new ConflictError('Email already exists');
+      throw new ER_MES_CONFLICT_ERROR('Email already exists');
     } else {
       return bcrypt.hash(password, 10);
     }
   })
   .then(hash => {
-    return User.create({ email, password: hash, })
+    return User.create({ name, about, avatar, email, password: hash, })
   })
     .then(user => res.status(ER_MES_CREATED).send({
-      name: user.name,
-      about: user.about,
-      avatar: user.avatar,
-      email: user.email,
+      data:user
      })
       ) // 201  //data:users
     .catch((err) => {
-      if(err instanceof ConflictError) {
-        return res.status(ER_MES_CONFLICT_ERROR).send({ message:'The user with the provided email already exists'}); //409
-      }
+      // if(err instanceof ER_MES_CONFLICT_ERROR) {
+      //   return res.status(ER_MES_CONFLICT_ERROR).send({ message:'The user with the provided email already exists'}); //409
+      // }
       if (err.name === 'ValidationError') {
         // res.status(ER_MES_BAD_REQUEST).send({ message: err.message }); // 400
         res.status(ER_MES_BAD_REQUEST).send({
@@ -128,6 +125,8 @@ module.exports.createUser = (req, res, next) => {
       }
     });
 };
+
+
 
 // module.exports.updateUserAvatar = (req, res) => {
 //   const {avatar} = req.body

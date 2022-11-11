@@ -210,15 +210,15 @@ function App() {
     setSelectedCardForDeletion(_id);
   }
 
-  const handleAddPlaceSubmit = ({ name, link }) => {
+  const handleAddPlaceSubmit = (card) => {
     // if (!name || !link) {
     //   throw new Error("name or link is missing");
     // }
     setIsLoading(true);
     api
-      .createCard({ name, link }, token)
-      .then((newCard) => {
-        setCards([newCard.data, ...cards]);
+      .createCard(card, token)
+      .then(card => {
+        setCards([card, ...cards]);
         closeAllPopups();
       })
       .catch((err) => {
