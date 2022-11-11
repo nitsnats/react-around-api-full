@@ -75,13 +75,14 @@ module.exports.getUser = (req, res) => {
 
 module.exports.login = (req, res ) => {
   const { email, password } = req.body;
-
+  console.log('line 78', password)
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ id: user._id }, JWT_SECRET, {
         expiresIn: '7d',
       });
       res.send({ data: user.toJSON(), token });
+      console.log('line 85', password)
     })
     .catch((err) => {
       res.status(ER_MES_UNSUTHORIZED_ERROR).send({ message: err.message }); //401
@@ -91,17 +92,20 @@ module.exports.login = (req, res ) => {
 // POST
 module.exports.createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
+  console.log('line 94', password)
   User.findOne({ email })
   .then((user) => {
     if (user) {
       throw new ER_MES_CONFLICT_ERROR('Email already exists');
     } else {
+      console.log('line 99', password)
       return bcrypt.hash(password, 10);
     }
   })
   .then((hash) => {
     return User.create({ name, about, avatar, email, password: hash, })
   })
+  console.log('line108', name, about, avatar, email, password)
     .then((user) => res.status(ER_MES_CREATED).send({
       data:user
      })
