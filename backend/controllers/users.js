@@ -99,10 +99,10 @@ module.exports.createUser = (req, res, next) => {
       return bcrypt.hash(password, 10);
     }
   })
-  .then(hash => {
+  .then((hash) => {
     return User.create({ name, about, avatar, email, password: hash, })
   })
-    .then(user => res.status(ER_MES_CREATED).send({
+    .then((user) => res.status(ER_MES_CREATED).send({
       data:user
      })
       ) // 201  //data:users
@@ -121,6 +121,7 @@ module.exports.createUser = (req, res, next) => {
         //   .join(', ')}`,
         // });
       } else {
+        console.log('line 124', err)
         res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: 'An error occured' }); // 500
       }
     });
