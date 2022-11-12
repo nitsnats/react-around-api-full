@@ -57,6 +57,7 @@ module.exports.createCard = (req, res) => {
 
     .then((card) => res.status(ER_MES_CREATED).send(card)) // 201
     .catch((err) => {
+      console.log('err ===>', err)
       if (err.name === 'ValidationError') {
         //res.status(ER_MES_BAD_REQUEST).send({ message: 'Data format is incorrect' }); // 400
         res.status(400).send(err.message)
@@ -132,7 +133,7 @@ const updateLikes = (req, res, operator) => {
     { new: true },
   )
     .orFail(() => {
-      const error = new Error({ message: 'Card not found' });
+      const error = new Error('Card not found');
       error.statusCode = ER_MES_BAD_REQUEST; // 400
       throw error;
     })

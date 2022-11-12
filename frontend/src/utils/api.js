@@ -65,7 +65,7 @@ class Api {
     })
   }
 
-  editAvatar(avatar, token) {
+  editAvatar({avatar}, token) {
     return this._request(`${this._baseUrl}/users/me/avatar`, {
       headers: {
         ...this._headers,

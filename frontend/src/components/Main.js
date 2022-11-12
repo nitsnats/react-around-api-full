@@ -60,7 +60,7 @@ const Main = ({
             return (
               <Card
                 card={card}
-                key={card._id}
+                key={card._id} //!!!!!
                 onCardClick={onCardClick}
                 onCardLike={onCardLike}
                 onCardDelete={onCardDelete}

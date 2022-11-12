@@ -45,7 +45,7 @@ function App() {
     api
       .getUserInfo(token)
       .then((res) => {
-        setCurrentUser(res);
+        setCurrentUser(res.data);
       })
       .catch(console.log);
   }, [token]);
@@ -65,14 +65,15 @@ function App() {
       auth
         .checkToken(token)
         .then((res) => {
-          if (res._id) {
+          if (res.data._id) {
             setIsLoggedIn(true);
-            setUserData({ email: res.email });
+            setUserData(res.data); //header
+            setCurrentUser(res.data); //profile
             history.push("/main");
           }
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
           history.push("/signin");
         })
         .finally(() => {
@@ -138,7 +139,8 @@ function App() {
     api
       .editProfile({name, about}, token)
       .then((res) => {
-        setCurrentUser(res);
+        // console.log('res  =======>', res)
+        setCurrentUser(res.data);
         closeAllPopups();
       })
       .catch(console.log)
@@ -147,14 +149,16 @@ function App() {
       });
   };
 
-  const handleUpdateAvatar = ({ avatar }) => {
+  const handleUpdateAvatar = ({avatar}) => {
     setIsLoading(true);
     api
       .editAvatar({avatar}, token)
       .then((res) => {
-        setCurrentUser({ ...currentUser, avatar: res.avatar });
+        setCurrentUser(res.data.avatar);
+    console.log('line 156 res ===>', res)
         closeAllPopups();
       })
+      
       .catch(console.log)
       .finally(() => {
         setIsLoading(false);

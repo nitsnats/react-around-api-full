@@ -6,7 +6,7 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: [true, 'The "name" field must be filled in'],
     minlength: [2, 'The minimum length of name is 2'],
-    maxlength: [30, 'The maximum length of name is 2'],
+    maxlength: [30, 'The maximum length of name is 30'],
   },
   link: {
     type: String,
@@ -26,7 +26,7 @@ const cardSchema = new mongoose.Schema({
     maxlength: 30,
   },
   likes: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: [mongoose.Schema.Types.ObjectId],
     ref: 'user',
     default: [],
     createdAt: {

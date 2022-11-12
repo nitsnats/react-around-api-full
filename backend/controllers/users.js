@@ -24,65 +24,47 @@ module.exports.getUsers = (req, res) => {
     .catch((err) => res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: err.message })); // 500
 };
 
+const getUserById = (userId, res, req) => {
+  User.findById(userId)
+  .orFail(() => {
+    const error = new Error({ message: 'User not found' });
+    error.statusCode = ER_MES_NOT_FOUND; // 404
+    throw error;
+  })
+  .then((user) => {
+    res.status(ER_MES_OK).send({ data: user }); // 200
+  })
+  .catch((err) => {
+    if (err.name === 'CastError') {
+      res.status(ER_MES_BAD_REQUEST).send({ message: 'Invalid user' }); // 400
+    } else if (err.status === 404) {
+      res.status(ER_MES_NOT_FOUND).send({ message: err.message }); // 404
+    } else {
+      res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: err.message }); // 500
+    }
+  });
+}
+
 // GET
 module.exports.getUser = (req, res) => {
   const { userId } = req.params;
-  User.findById(userId)
-    .orFail(() => {
-      const error = new Error({ message: 'User not found' });
-      error.statusCode = ER_MES_NOT_FOUND; // 404
-      throw error;
-    })
-    .then((user) => {
-      res.status(ER_MES_OK).send({ data: user }); // 200
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(ER_MES_BAD_REQUEST).send({ message: 'Invalid user' }); // 400
-      } else if (err.status === 404) {
-        res.status(ER_MES_NOT_FOUND).send({ message: err.message }); // 404
-      } else {
-        res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: err.message }); // 500
-      }
-    });
+  getUserById(userId, res, req);
 };
 
-// POST /signin
-// module.exports.login = (req, res) => {
-//   const { email, password } = req.body;
+module.exports.getCurrentUser = (req, res) => {
+  const userId = req.user.id;
+  getUserById(userId, res, req);
+};
 
-//   User.findOne({ email })
-//     .then((user) => {
-//       if (!user) {
-//         return Promise.reject(new Error('Incorrect password or email'));
-//       }
-//       return bcrypt.compare(password, user.password);
-//     })
-//     .then((matched) => {
-//       if (!matched) {
-//         // the hashes didn't match, rejecting the promise
-//         return Promise.reject(new Error('Incorrect password or email'));
-//       }
-//       // successful authentication
-//       res.send({ message: 'Everything good!' });
-//     })
-//     .catch((err) => {
-//       res
-//         .status(401)
-//         .send({ message: err.message });
-//     });
-// };
 
 module.exports.login = (req, res ) => {
   const { email, password } = req.body;
-  console.log('line 78', password)
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ id: user._id }, JWT_SECRET, {
         expiresIn: '7d',
       });
       res.send({ data: user.toJSON(), token });
-      console.log('line 85', password)
     })
     .catch((err) => {
       res.status(ER_MES_UNSUTHORIZED_ERROR).send({ message: err.message }); //401
@@ -92,20 +74,17 @@ module.exports.login = (req, res ) => {
 // POST
 module.exports.createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
-  console.log('line 94', password)
   User.findOne({ email })
   .then((user) => {
     if (user) {
       throw new ER_MES_CONFLICT_ERROR('Email already exists');
     } else {
-      console.log('line 99', password)
       return bcrypt.hash(password, 10);
     }
   })
   .then((hash) => {
     return User.create({ name, about, avatar, email, password: hash, })
   })
-  console.log('line108', name, about, avatar, email, password)
     .then((user) => res.status(ER_MES_CREATED).send({
       data:user
      })
@@ -191,12 +170,12 @@ module.exports.createUser = (req, res, next) => {
 // PATCH
 const updateUserData = (req, res) => {
   // const body = req.body
-  const id = req.user._id;
+  const id = req.user.id;
   const { body } = req;
 
-  User.findByIdAndUpdate(id, body, { runValidators: true })
+  User.findByIdAndUpdate(id, body, { runValidators: true, new: true })
     .orFail(() => {
-      const error = new Error({ message: 'No user id not found' });
+      const error = new Error( 'No user id not found' );
       error.statusCode = ER_MES_NOT_FOUND; // 404
       throw error;
     })
@@ -215,10 +194,11 @@ const updateUserData = (req, res) => {
 module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
-  // const id = req.user._id
+  // const id = req.user.id
 
   if (!avatar) {
-    return res.status(ER_MES_BAD_REQUEST).send({ message: 'avatar cant be empty' }); // 400
+    // return res.status(ER_MES_BAD_REQUEST).send({ message: 'avatar cant be empty' }); // 400
+    throw new ER_MES_BAD_REQUEST('Please update avatar'); // 400  אולי צריך להחליף!!!!
   }
 
   return updateUserData(req, res);
