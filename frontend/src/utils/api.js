@@ -41,8 +41,8 @@ class Api {
     })
   }
     
-  deleteCard(cardId, token) {
-    return this._request(`${this._baseUrl}/cards/${cardId}`, {
+  deleteCard(cardId, token) {    
+    return this._request(`${this._baseUrl}/cards/${cardId}`, {   // '/cards/:cardId'
       headers: {
         ...this._headers,
         authorization: `Bearer ${token}`,
@@ -78,8 +78,10 @@ class Api {
     })
   }
 
-  addLike(id, token) {
-    return this._request(`${this._baseUrl}/cards/likes/${id}`, {
+  addLike(id, isLiked, token) {
+    if (!isLiked) {
+    //return this._request(`${this._baseUrl}/cards/likes/${id}`, {
+      return this._request(`${this._baseUrl}/cards/${id}/likes`, {
       headers: {
         ...this._headers,
         authorization: `Bearer ${token}`,
@@ -87,9 +89,11 @@ class Api {
       method: "PUT",
     })
   }
+  }
 
   removeLike(id, token) {
-    return this._request(`${this._baseUrl}/cards/likes/${id}`, {
+    //return this._request(`${this._baseUrl}/cards/likes/${id}`, {   
+    return this._request(`${this._baseUrl}/cards/${id}/likes`, {
       headers: {
         ...this._headers,
         authorization: `Bearer ${token}`,

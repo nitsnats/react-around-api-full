@@ -13,7 +13,9 @@ const cardSchema = new mongoose.Schema({
     required: [true, 'The "Link" field must be filled in'],
     validate: {
       validator(v) {
-        return LINK_REGEXP.test(v);
+
+        return v.includes('http');
+        //return LINK_REGEXP.test(v);
       },
       message: 'Sorry. the link is not valid!',
     },

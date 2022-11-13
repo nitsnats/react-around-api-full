@@ -16,7 +16,7 @@ function Card({
 
   // Checking if the current user is the owner of the current card
   const isOwn = owner === currentUser._id;
-
+    
   // Creating a variable for the delete button
   //const cardDeleteButtonClassName = 'element__button-delete_visible';
   const cardDeleteButtonClassName = `element__button-delete ${

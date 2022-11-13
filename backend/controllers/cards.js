@@ -124,14 +124,17 @@ module.exports.createCard = (req, res) => {
 // }
 
 const updateLikes = (req, res, operator) => {
-  const cardId = req.params;
-  const userId = req.user._id;
+  const {cardId} = req.params;
+  const userId = req.user.id;
+
+// console.log('userId', userId)
 
   Card.findByIdAndUpdate(
     cardId,
-    { [operator]: { likes: userId } },
-    { new: true },
+    { [operator]: { likes: userId} },
+    { new: true }
   )
+
     .orFail(() => {
       const error = new Error('Card not found');
       error.statusCode = ER_MES_BAD_REQUEST; // 400
@@ -141,6 +144,7 @@ const updateLikes = (req, res, operator) => {
       res.status(ER_MES_OK).send({ data: card }); // 200
     })
     .catch((err) => {
+      console.log(err)
       if (err.name === 'CastError') {
         res.status(ER_MES_BAD_REQUEST).send({ message: 'Card id is incorrect' }); // 400
       } else if (err.status === 404) {

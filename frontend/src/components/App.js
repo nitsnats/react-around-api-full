@@ -155,7 +155,6 @@ function App() {
       .editAvatar({avatar}, token)
       .then((res) => {
         setCurrentUser(res.data);
-    console.log('line 156 res ===>', res)
         closeAllPopups();
       })
       
@@ -180,7 +179,7 @@ function App() {
         .catch(console.log);
     } else {
       api
-        .addLike(card._id, !isLiked, token)
+        .addLike(card._id, isLiked, token)
 
         .then((likedCard) => {
           const newCards = cards.map((card) => {
@@ -196,8 +195,7 @@ function App() {
     e.preventDefault();
     setIsLoading(true);
     api
-      .deleteCard(selectedCardForDeletion)
-
+      .deleteCard(selectedCardForDeletion, token)
       .then((res) => {
         const newCards = cards.filter((c) => c._id !== selectedCardForDeletion);
         setCards(newCards);

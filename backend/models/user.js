@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'The "Avatar" field must be filled in'],
     validate: {
       validator(v) {
-        return LINK_REGEXP.test(v);
+        return v.includes('http');
       },
       message: 'Sorry. the link is not valid!',
     },

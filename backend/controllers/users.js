@@ -181,6 +181,7 @@ const updateUserData = (req, res) => {
     })
     .then((user) => res.status(ER_MES_CREATED).send({ data: user })) // 201
     .catch((err) => {
+      console.log(err)
       if (err.name === 'CastError') {
         res.status(ER_MES_BAD_REQUEST).send({ message: 'The user id in not correct' }); // 400
       } else if (err.status === 404) {

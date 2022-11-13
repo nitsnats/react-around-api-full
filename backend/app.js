@@ -27,7 +27,6 @@ app.post('/signup', createUser);
 app.post('/signin', login);
 app.use(auth);
 
-
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 
