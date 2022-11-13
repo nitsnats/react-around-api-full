@@ -16,7 +16,8 @@ function Card({
 
   // Checking if the current user is the owner of the current card
   const isOwn = owner === currentUser._id;
-    
+  //  console.log('owner', owner)
+  //  console.log('isOwn', isOwn) 
   // Creating a variable for the delete button
   //const cardDeleteButtonClassName = 'element__button-delete_visible';
   const cardDeleteButtonClassName = `element__button-delete ${
@@ -24,7 +25,10 @@ function Card({
   }`;
   
   // Check if the card was liked by the current user
+  
   const isLiked = likes.some((user) => user._id === currentUser._id);
+  
+  console.log('isLiked', isLiked)
   // Creating a variable for the like button
   //const cardLikeButtonClassName = 'element__button-like_active';
   const cardLikeButtonClassName = `element__button-like ${
