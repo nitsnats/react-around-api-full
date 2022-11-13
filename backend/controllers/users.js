@@ -194,11 +194,11 @@ const updateUserData = (req, res) => {
 module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
-  // const id = req.user.id
-
+  const id = req.user.id
+// console.log('line198',id )
   if (!avatar) {
-    // return res.status(ER_MES_BAD_REQUEST).send({ message: 'avatar cant be empty' }); // 400
-    throw new ER_MES_BAD_REQUEST('Please update avatar'); // 400  אולי צריך להחליף!!!!
+    return res.status(ER_MES_BAD_REQUEST).send({ message: 'avatar cant be empty' }); // 400
+    // throw new ER_MES_BAD_REQUEST('Please update avatar'); // 400
   }
 
   return updateUserData(req, res);

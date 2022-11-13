@@ -154,7 +154,7 @@ function App() {
     api
       .editAvatar({avatar}, token)
       .then((res) => {
-        setCurrentUser(res.data.avatar);
+        setCurrentUser(res.data);
     console.log('line 156 res ===>', res)
         closeAllPopups();
       })

@@ -73,7 +73,7 @@ class Api {
       },
       method: "PATCH",
       body: JSON.stringify({
-        avatar: avatar,
+        avatar,
       }),
     })
   }
