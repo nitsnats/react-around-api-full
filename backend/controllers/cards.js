@@ -27,7 +27,7 @@ module.exports.deleteCard = (req, res) => {
       throw error;
     })
     .then((card) => {
-      res.status(ER_MES_OK).send({ message: 'Card has been deleted', data: card }); // 200
+      res.status(ER_MES_OK).send({ message: 'Card has been deleted', card }); // 200
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -67,43 +67,6 @@ module.exports.createCard = (req, res) => {
     });
 };
 
-// module.exports.likeCard = (req, res) => {
-//   const cardId = req.params.cardId
-//   const userId = req.user._id
-
-//   Card.findByIdAndUpdate(
-//     cardId,
-//     { $addToSet: { likes: req.user._id } },
-//     { new: true },
-//   )
-//   .orFail(() => {
-//     const error = new Error("No card found with that id");
-//     error.statusCode = 404;
-//     throw error;
-//   })
-//   .then(card => {
-//       res.status(200).send({ message: '', data: card })
-//   })
-//   .catch(err => {
-//     if(err.name === 'CastError') {
-//       res.status(400).send('Invalid format of Id')
-//     } else if (err.status === 404) {
-//       res.status(404).send({ message: err.message })
-//     } else {
-//       res.status(500).send({ message: "Something went worng" })
-//     }
-// });
-// }
-
-// module.exports.dislikeCard = (req, res) => {
-//   const cardId = req.params.cardId
-//   const userId = req.user._id
-
-//   Card.findByIdAndUpdate(
-//     cardId,
-//     { $pull: { likes: req.user._id } }, // add _id to the array if it's not there yet
-//     { new: true },
-//   )
 //   .orFail(() => {
 //     const error = new Error("No card found with that id");
 //     error.statusCode = 404;
@@ -127,21 +90,21 @@ const updateLikes = (req, res, operator) => {
   const {cardId} = req.params;
   const userId = req.user.id;
 
-// console.log('userId', userId)
+// console.log('userId===>', userId)
+// console.log('likes', likes)
 
   Card.findByIdAndUpdate(
     cardId,
     { [operator]: { likes: userId} },
     { new: true }
   )
-
-    .orFail(() => {
+      .orFail(() => {
       const error = new Error('Card not found');
       error.statusCode = ER_MES_BAD_REQUEST; // 400
       throw error;
     })
     .then((card) => {
-      res.status(ER_MES_OK).send({ data: card }); // 200
+      res.status(ER_MES_OK).send(card); // 200
     })
     .catch((err) => {
       console.log(err)

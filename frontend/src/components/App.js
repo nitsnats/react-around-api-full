@@ -165,7 +165,7 @@ function App() {
   };
 
   const handleCardLike = (card) => {
-    const isLiked = card.likes.some((user) => user === currentUser._id);
+    const isLiked = card.likes.some(user => user === currentUser._id);
 //console.log('isLiked', isLiked)
     if (isLiked) {
       api
@@ -173,7 +173,9 @@ function App() {
         .then((unlikedCard) => {
           const newCards = cards.map((card) => {
             return card._id === unlikedCard._id ? unlikedCard.data : card;
+            
           });
+          
           setCards(newCards);
         })
         .catch(console.log);

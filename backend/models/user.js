@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const isEmail = require('validator/lib/isEmail');
-const { LINK_REGEXP } = require('../constants/regex');
+const { LINK_REGEXP, MAIL_REGEXP } = require('../constants/regex');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'The "Avatar" field must be filled in'],
     validate: {
       validator(v) {
-        return v.includes('http');
+        return LINK_REGEXP.test(v);
       },
       message: 'Sorry. the link is not valid!',
     },
@@ -35,13 +35,15 @@ const userSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: (v) => isEmail(v),
+      // validator(v) {
+      //   return MAIL_REGEXP.test(v);
+      // },
       message: 'Wrong email format',
     },
   },
   password: {
     type: String,
     required: [true, 'The "password" field must be filled in'],
-    //minlength: [8, 'The minimum length of about is 8'],
     select: false,
   },
 });

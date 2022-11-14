@@ -25,15 +25,18 @@ function Card({
   }`;
   
   // Check if the card was liked by the current user
+  const isLiked = likes.some((user) => user === currentUser._id);
   
-  const isLiked = likes.some((user) => user._id === currentUser._id);
-  
-  console.log('isLiked', isLiked)
+  // console.log('isLiked', isLiked)
   // Creating a variable for the like button
   //const cardLikeButtonClassName = 'element__button-like_active';
   const cardLikeButtonClassName = `element__button-like ${
     isLiked ? "element__button-like_active" : ""
   }`;
+
+  // const cardLikeButtonClassName = `element__button-like ${
+  //   isLiked && 'element__button-like_active'}`;
+
 
   function handleClick() {
     onCardClick({ name, link, likes });
@@ -46,7 +49,7 @@ function Card({
   function handleDelete() {
     handleDeleteClick(_id);
   }
-
+  // console.log('isLiked==>!', isLiked)
   // props
   //   function handleClick() {
   //     props.onCardClick(props.name, props.link);
