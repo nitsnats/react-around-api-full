@@ -172,7 +172,7 @@ function App() {
         .removeLike(card._id, token)
         .then((unlikedCard) => {
           const newCards = cards.map((card) => {
-            return card._id === unlikedCard._id ? unlikedCard.data : card;
+            return card._id === unlikedCard._id ? unlikedCard : card;
             
           });
           
@@ -187,6 +187,7 @@ function App() {
           const newCards = cards.map((card) => {
             return card._id === likedCard._id ? likedCard : card;
           });
+          // console.log('likedCard=====>', likedCard)
           setCards(newCards);
         })
         .catch(console.log);
