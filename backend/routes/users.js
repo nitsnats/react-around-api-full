@@ -5,6 +5,12 @@ const router = require('express').Router();
 // const usersPath = path.join(__dirname, '../data/users.json');
 
 const {
+  validateProfile,
+  validateAvatar,
+  validateId,
+} = require('../middlewares/validators');
+
+const {
   getCurrentUser,
   getUsers,
   getUser,
@@ -14,8 +20,8 @@ const {
 
 router.get('/users/me', getCurrentUser);
 router.get('/users', getUsers);
-router.patch('/users/me', updateUser);
-router.patch('/users/me/avatar', updateAvatar);
-router.get('/users/:userId', getUser);
+router.patch('/users/me', validateProfile, updateUser);
+router.patch('/users/me/avatar', validateAvatar, updateAvatar);
+router.get('/users/:userId', validateId, getUser);
 
 module.exports = router;

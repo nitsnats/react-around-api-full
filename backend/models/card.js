@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { LINK_REGEXP } = require('../constants/regex');
+const validator = require('validator');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -15,6 +16,7 @@ const cardSchema = new mongoose.Schema({
       validator(v) {
         return LINK_REGEXP.test(v);
       },
+      //validator: (value) => validator.isURL(value),
       message: 'Sorry. the link is not valid!',
     },
   },
@@ -26,14 +28,15 @@ const cardSchema = new mongoose.Schema({
     maxlength: 30,
   },
   likes: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'user',
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
     default: [],
+  },
     createdAt: {
       type: Date,
       default: Date.now,
     },
   },
-});
+  { versionKey: false },
+  );
 
 module.exports = mongoose.model('card', cardSchema);

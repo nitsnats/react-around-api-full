@@ -2,45 +2,54 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../constants/config');
-
 // const { JWT_SECRET } = process.env;
+const BadRequestError = require('../errors/BadRequestError');
+const InternalServerError = require('../errors/InternalServerError');
+const NotFoundError = require('../errors/NotFoundError');
+const UnAuthorizedError = require('../errors/UnAuthorizedError');
+const ConflictError = require('../errors/ConflictError');
 
-// const statusCodes = require('../constants/error');
 const {
   ER_MES_OK,
   ER_MES_CREATED,
-  ER_MES_BAD_REQUEST,
-  ER_MES_NOT_FOUND,
-  ER_MES_INTERNAL_SERVER_ERROR,
-  ER_MES_UNSUTHORIZED_ERROR,
-  ER_MES_CONFLICT_ERROR,
+  //ER_MES_UNSUTHORIZED_ERROR,
+  //ER_MES_CONFLICT_ERROR,
+  // ER_MES_INTERNAL_SERVER_ERROR,
+  // ER_MES_NOT_FOUND,
+  // ER_MES_BAD_REQUEST,
 } = require('../constants/error');
 const { default: mongoose } = require('mongoose');
+
 
 // GET
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((users) => res.status(ER_MES_OK).send({ data: users })) // 200
-    .catch((err) => res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: err.message })); // 500
+    .catch((err) => next(new InternalServerError(err.message)));// 500
+    //res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: err.message })); // 500
 };
 
 const getUserById = (userId, res, req) => {
   User.findById(userId)
   .orFail(() => {
-    const error = new Error({ message: 'User not found' });
-    error.statusCode = ER_MES_NOT_FOUND; // 404
-    throw error;
+    // const error = new Error({ message: 'User not found' });
+    // error.statusCode = ER_MES_NOT_FOUND; // 404
+    // throw error;
+    return next(new NotFoundError('User not found'));// 404
   })
   .then((user) => {
     res.status(ER_MES_OK).send({ data: user }); // 200
   })
   .catch((err) => {
     if (err.name === 'CastError') {
-      res.status(ER_MES_BAD_REQUEST).send({ message: 'Invalid user' }); // 400
+      //res.status(ER_MES_BAD_REQUEST).send({ message: 'Invalid user' }); // 400
+      return next(new BadRequestError('Invalid user'));// 400
     } else if (err.status === 404) {
-      res.status(ER_MES_NOT_FOUND).send({ message: err.message }); // 404
+      //res.status(ER_MES_NOT_FOUND).send({ message: err.message }); // 404
+      return next(new NotFoundError(err.message));// 404
     } else {
-      res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: err.message }); // 500
+      //res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: err.message }); // 500
+      return next(new InternalServerError(err.message));// 500
     }
   });
 }
@@ -67,7 +76,8 @@ module.exports.login = (req, res ) => {
       res.send({ data: user.toJSON(), token });
     })
     .catch((err) => {
-      res.status(ER_MES_UNSUTHORIZED_ERROR).send({ message: err.message }); //401
+      //res.status(ER_MES_UNSUTHORIZED_ERROR).send({ message: err.message }); //401
+      return next(new UnAuthorizedError(err.message));// 401
     });
   };
 
@@ -77,7 +87,8 @@ module.exports.createUser = (req, res, next) => {
   User.findOne({ email })
   .then((user) => {
     if (user) {
-      throw new ER_MES_CONFLICT_ERROR('Email already exists');
+      //throw new ER_MES_CONFLICT_ERROR('Email already exists');
+      return next(new ConflictError('Email already exists'));// 409
     } else {
       return bcrypt.hash(password, 10);
     }
@@ -95,17 +106,17 @@ module.exports.createUser = (req, res, next) => {
       // }
       if (err.name === 'ValidationError') {
         // res.status(ER_MES_BAD_REQUEST).send({ message: err.message }); // 400
-        res.status(ER_MES_BAD_REQUEST).send({
-          message: `${Object.values(err.errors)
-            .map((error) => error.message)
-            .join(', ')}`,
-        });
-        // next(new ER_MES_BAD_REQUEST(`${Object.values(err.errors).map((error) => error.message)
-        //   .join(', ')}`,
+        // res.status(ER_MES_BAD_REQUEST).send({
+        //   message: `${Object.values(err.errors)
+        //     .map((error) => error.message)
+        //     .join(', ')}`,
         // });
+        return next(new BadRequestError(`${Object.values(err.errors).map((error) => error.message)
+          .join(', ')}`,
+        ));
       } else {
-        console.log('line 124', err)
-        res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: 'An error occured' }); // 500
+        //res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: 'An error occured' }); // 500
+        return next(new InternalServerError('An error occured'));// 500
       }
     });
 };
@@ -175,19 +186,23 @@ const updateUserData = (req, res) => {
 
   User.findByIdAndUpdate(id, body, { runValidators: true, new: true })
     .orFail(() => {
-      const error = new Error( 'No user id not found' );
-      error.statusCode = ER_MES_NOT_FOUND; // 404
-      throw error;
+      // const error = new Error( 'No user id not found' );
+      // error.statusCode = ER_MES_NOT_FOUND; // 404
+      // throw error;
+      return next(new NotFoundError('No user id not found'));// 404
     })
     .then((user) => res.status(ER_MES_CREATED).send({ data: user })) // 201
     .catch((err) => {
       console.log(err)
       if (err.name === 'CastError') {
-        res.status(ER_MES_BAD_REQUEST).send({ message: 'The user id in not correct' }); // 400
+       // res.status(ER_MES_BAD_REQUEST).send({ message: 'The user id in not correct' }); // 400
+       return next(new BadRequestError('The user id in not correct'));// 400
       } else if (err.status === 404) {
-        res.status(ER_MES_NOT_FOUND).send({ message: err.message }); // 404
+        //res.status(ER_MES_NOT_FOUND).send({ message: err.message }); // 404
+        return next(new NotFoundError(err.message));// 404
       } else {
-        res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: 'Something went wrong' }); // 500
+        //res.status(ER_MES_INTERNAL_SERVER_ERROR).send({ message: 'Something went wrong' }); // 500
+        return next(new InternalServerError('Something went wrong'));// 500
       }
     });
 };
@@ -198,8 +213,9 @@ module.exports.updateAvatar = (req, res) => {
   const id = req.user.id
 // console.log('line198',id )
   if (!avatar) {
-    return res.status(ER_MES_BAD_REQUEST).send({ message: 'avatar cant be empty' }); // 400
+    //return res.status(ER_MES_BAD_REQUEST).send({ message: 'avatar cant be empty' }); // 400
     // throw new ER_MES_BAD_REQUEST('Please update avatar'); // 400
+    return next(new BadRequestError('avatar cant be empty'));// 400
   }
 
   return updateUserData(req, res);
@@ -209,7 +225,8 @@ module.exports.updateUser = (req, res) => {
   const { name, about } = req.body;
 
   if (!name || !about) {
-    return res.status(ER_MES_BAD_REQUEST).send({ message: 'avatar cant be empty' }); // 400
+    //return res.status(ER_MES_BAD_REQUEST).send({ message: 'avatar cant be empty' }); // 400
+    return next(new BadRequestError('avatar cant be empty'));// 400
   }
 
   return updateUserData(req, res);

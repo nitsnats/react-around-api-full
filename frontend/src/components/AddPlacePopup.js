@@ -41,7 +41,7 @@ const AddPlacePopup = ({ onAddPlaceSubmit, isOpen, onClose, isLoading }) => {
         name="card-title"
         placeholder="Card title"
         required
-        minLength="1"
+        minLength="2"
         maxLength="30"
         value={cardName}
         //onChange={e => setCardName(e.target.value)}

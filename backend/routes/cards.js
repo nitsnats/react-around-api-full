@@ -14,11 +14,16 @@ const {
   dislikeCard,
 } = require('../controllers/cards');
 
+const {
+  validateCard,
+  validateId,
+} = require('../middlewares/validators');
+
 router.get('/cards', getCards);
-router.post('/cards', createCard);
-router.delete('/cards/:cardId', deleteCard);
-router.put('/cards/:cardId/likes', likeCard);
-router.delete('/cards/:cardId/likes', dislikeCard);
+router.post('/cards', validateCard, createCard);
+router.delete('/cards/:cardId', validateId, deleteCard);
+router.put('/cards/:cardId/likes', validateId, likeCard);
+router.delete('/cards/:cardId/likes',validateId, dislikeCard);
 
 // router.get('/cards', (req, res) => {
 //   fs.readFile(cardsPath, { encoding: 'utf8' })

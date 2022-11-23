@@ -1,12 +1,16 @@
 const express = require('express');
 //require('dotenv').config();
 const cors = require('cors');
+const { errors } = require("celebrate");
 const mongoose = require('mongoose');
 const helmet = require('helmet');
 const router = require('express').Router();
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
-
+//const { validateUser } = require('./middlewares/validators');
+const { validateLogin } = require('./middlewares/validators');
+const errorHandler = require('./middlewares/errorHandler');
+const { requestLogger, errorLogger } = require("./middlewares/logger");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -21,16 +25,14 @@ app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(requestLogger);
 
-
-app.post('/signup', createUser);
-app.post('/signin', login);
+app.post('/signup', validateLogin, createUser);
+app.post('/signin', validateLogin, login);
 app.use(auth);
 
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
-
-
 
 app.use('/cards', require('./routes/cards'));
 
@@ -45,10 +47,18 @@ app.use('/cards', require('./routes/cards'));
 app.use(userRouter);
 app.use(cardRouter);
 
+app.use(errorLogger);
+
+app.use(errors());
+app.use(errorHandler);
+
 app.use('/', (req, res) => {
   res.status(404).send({ message: 'Requested resource was not found' });
 });
 app.use('/', router);
+
+// app.use(errors());
+// app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
