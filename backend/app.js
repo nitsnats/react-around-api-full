@@ -1,5 +1,5 @@
 const express = require('express');
-//require('dotenv').config();
+require('dotenv').config();
 const cors = require('cors');
 const { errors } = require("celebrate");
 const mongoose = require('mongoose');
@@ -26,6 +26,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(requestLogger);
+
+app.get("/crash-test", () => {
+  setTimeout(() => {
+    throw new Error("Server will crash now");
+  }, 0);
+});
 
 app.post('/signup', validateLogin, createUser);
 app.post('/signin', validateLogin, login);

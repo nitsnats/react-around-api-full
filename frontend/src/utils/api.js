@@ -103,9 +103,17 @@ class Api {
   }
 }
 
+let node_env = "production";
+
+let base_url =
+  node_env === "production"
+    ? "https://api.nitsnats.students.nomoredomainssbs.ru"
+    : "http://localhost:3001";
+
+
 export const api = new Api({
     //"http://localhost:3001", //baseUrl: "https://around.nomoreparties.co/v1/cohort-3-en",//'https://api.nomoreparties.co'
-  baseUrl: "https://nitsnats.students.nomoredomainssbs.ru",
+  baseUrl: base_url,
   headers: {
     authorization: `Bearer ${localStorage.getItem('jwt')}`, // "4cdae314-7e8a-4bed-8ada-70ad33c12e13"
     "Content-Type": "application/json",//-no need
