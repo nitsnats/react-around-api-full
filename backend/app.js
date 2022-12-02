@@ -18,12 +18,14 @@ const { PORT = 3001 } = process.env;
 mongoose.connect('mongodb://127.0.0.1:27017/aroundb');
 // mongoose.connect('mongodb://localhost:27017/aroundb');
 
-app.use(cors());
-app.options('*', cors());
+
 
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(cors());
+app.options('*', cors());
 
 app.use(requestLogger);
 
