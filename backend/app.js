@@ -50,7 +50,7 @@ app.use(auth);
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 
-app.use('/cards', require('./routes/cards'));
+//app.use('/cards', require('./routes/cards'));
 
 // app.use((req, res, next) => {
 //   req.user = {
@@ -68,10 +68,10 @@ app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 
-app.use('/', (req, res) => {
-  res.status(404).send({ message: 'Requested resource was not found' });
-});
-app.use('/', router);
+// app.use('/', (req, res) => {
+//   res.status(404).send({ message: 'Requested resource was not found' });
+// });
+// app.use('/', router);
 
 // app.use(errors());
 // app.use(errorHandler);
