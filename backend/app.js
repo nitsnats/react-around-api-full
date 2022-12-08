@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
@@ -41,6 +42,9 @@ app.get('/alive',(req,res)=>{
 
 app.post('/signup', validateLogin, createUser);
 app.post('/signin', validateLogin, login);
+
+app.use(express.static(path.resolve(__dirname, '../frontend/build')))
+
 app.use(auth);
 
 const userRouter = require('./routes/users');
