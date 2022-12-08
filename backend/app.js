@@ -35,6 +35,10 @@ app.get("/crash-test", () => {
   }, 0);
 });
 
+app.get('/alive',(req,res)=>{
+  res.send('im alive')
+})
+
 app.post('/signup', validateLogin, createUser);
 app.post('/signin', validateLogin, login);
 app.use(auth);
