@@ -43,7 +43,7 @@ app.get('/alive',(req,res)=>{
 app.post('/signup', validateLogin, createUser);
 app.post('/signin', validateLogin, login);
 
-app.use(express.static(path.resolve(__dirname, '../frontend/build')))
+//app.use(express.static(path.resolve(__dirname, '../frontend/build')))
 
 app.use(auth);
 
