@@ -1,4 +1,4 @@
-const path = require('path');
+// const path = require('path');
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
@@ -36,9 +36,9 @@ app.get("/crash-test", () => {
   }, 0);
 });
 
-app.get('/alive',(req,res)=>{
-  res.send('im alive')
-})
+// app.get('/alive',(req,res)=>{
+//   res.send('im alive')
+// })
 
 app.post('/signup', validateLogin, createUser);
 app.post('/signin', validateLogin, login);
