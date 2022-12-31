@@ -101,7 +101,7 @@ const validateCard = celebrate({
   }),
 });
 
-// Id validation
+// Id card validation
 const validateId = celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().required().custom((value, helpers) => {
@@ -113,9 +113,22 @@ const validateId = celebrate({
   }),
 });
 
+// Id user validation
+const validateUserId = celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().required().custom((value, helpers) => {
+      if (ObjectId.isValid(value)) {
+        return value;
+      }
+      return helpers.message('Invalid id');
+    }),
+  }),
+});
+
 module.exports = {
   validateURL,
   validateId,
+  validateUserId,
   validateCard, // router.post('/cards', validateCard, createCard);
   validateUser, // app.post('/signup', validateUser, createUser);
   validateLogin, // app.post('/signin', validateLogin, login);

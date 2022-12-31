@@ -11,12 +11,13 @@ const auth = require('./middlewares/auth');
 const { validateLogin } = require('./middlewares/validators');
 const errorHandler = require('./middlewares/errorHandler');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
+const { limiter } = require('./middlewares/limiter');
+const { DB_ADDRESS } = require('./constants/config');
 
 const app = express();
 const { PORT = 3000 } = process.env;
 
-mongoose.connect('mongodb://127.0.0.1:27017/aroundb');
-// mongoose.connect('mongodb://localhost:27017/aroundb');
+mongoose.connect(DB_ADDRESS);
 
 app.use(helmet());
 app.use(express.json());
@@ -60,6 +61,7 @@ const cardRouter = require('./routes/cards');
 app.use(userRouter);
 app.use(cardRouter);
 
+app.use(limiter);
 app.use(errorLogger);
 
 app.use(errors());

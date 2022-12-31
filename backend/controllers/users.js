@@ -76,7 +76,7 @@ module.exports.login = (req, res, next) => {
         secret,
         {
           expiresIn: '7d',
-        },
+        }
       );
       res.send({ data: user.toJSON(), token });
     })
