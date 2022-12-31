@@ -1,19 +1,19 @@
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const isEmail = require('validator/lib/isEmail');
-const { LINK_REGEXP, MAIL_REGEXP } = require('../constants/regex');
+const { LINK_REGEXP } = require('../constants/regex');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    default: "Jacques Cousteau",
+    default: 'Jacques Cousteau',
     required: [true, 'The "name" field must be filled in'],
     minlength: [2, 'The minimum length of name is 2'],
     maxlength: [30, 'The maximum length of name is 30'],
   },
   about: {
     type: String,
-    default: "Explorer",
+    default: 'Explorer',
     required: [true, 'The "About" field must be filled in'],
     minlength: [2, 'The minimum length of about is 2'],
     maxlength: [30, 'The maximum length of about is 30'],
@@ -49,25 +49,24 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.statics.findUserByCredentials = function findUserByCredentials (email, password,) {
+userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         return Promise.reject(new Error('Incorrect email or password'));
       }
-
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
             return Promise.reject(new Error('Incorrect email or password'));
           }
-
           return user; // now user is available
         });
     });
 };
 
 userSchema.methods.toJSON = function () {
+  // eslint-disable-next-line no-unused-vars
   const { password, ...obj } = this.toObject();
   return obj;
 };

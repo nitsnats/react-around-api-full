@@ -23,7 +23,7 @@ router.get('/cards', getCards);
 router.post('/cards', validateCard, createCard);
 router.delete('/cards/:cardId', validateId, deleteCard);
 router.put('/cards/:cardId/likes', validateId, likeCard);
-router.delete('/cards/:cardId/likes',validateId, dislikeCard);
+router.delete('/cards/:cardId/likes', validateId, dislikeCard);
 
 // router.get('/cards', (req, res) => {
 //   fs.readFile(cardsPath, { encoding: 'utf8' })

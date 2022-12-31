@@ -8,7 +8,6 @@ const errorHandler = (err, req, res, next) => {
 
 module.exports = errorHandler;
 
-
 // app.use((err, req, res, next) => {
 //   // if an error has no status, display 500
 //   const { statusCode = 500, message } = err;
